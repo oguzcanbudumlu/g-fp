@@ -43,3 +43,29 @@ func TestCharge(t *testing.T) {
 		})
 	}
 }
+
+func TestOrderHotdog(t *testing.T) {
+	testCC := BetterCreditCard{1000}
+	calledInnerFn := false
+	mockPayment := func(c BetterCreditCard, input int) (BetterCreditCard, CreditError) {
+		calledInnerFn = true
+		testCC.credit -= input
+		return testCC, nil
+	}
+
+	hotdog, resultF := OrderBetterHotdog(testCC, mockPayment)
+	if hotdog != NewBetterHotdog() {
+		t.Errorf("expected %v but got %v\n", NewBetterHotdog(), hotdog)
+	}
+
+	_, err := resultF()
+	if err != nil {
+		t.Errorf("encountered %v but expected no error\n", err)
+	}
+
+	if calledInnerFn == false {
+		t.Errorf("Inner fn did not get called\n")
+	}
+
+	println(NewBetterHotdog() == NewBetterHotdog())
+}

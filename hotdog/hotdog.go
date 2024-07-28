@@ -75,7 +75,7 @@ func Charge(c BetterCreditCard, amount int) (BetterCreditCard, CreditError) {
 func main() {
 	myCard := NewBetterCreditCard(1000)
 	hotdog, creditFn := OrderBetterHotdog(myCard, Charge)
-	fmt.Println("%+v\n", hotdog)
+	fmt.Printf("%+v\n", hotdog)
 	newCard, err := creditFn()
 	if err != nil {
 		panic("User has no credit")
