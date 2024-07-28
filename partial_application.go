@@ -19,7 +19,14 @@ func main() {
 	rocky := maleHavaneseSpawner("Rocky")
 	tipsy := femalePoodleSpawner("tipsy")
 	fmt.Printf("%v\n%v\n%v\n", bucky, rocky, tipsy)
+
+	// currying
+	fmt.Println(threeSum(10, 20, 30))
+	fmt.Println(threeSumCurried(10)(20)(30))
+	fmt.Println(DogSpawnerCurry(Havanese)(Male)("Bucksy"))
 }
+
+// spawner
 
 type (
 	Name        string
@@ -63,4 +70,34 @@ func DogSpawner(breed Breed, gender Gender) NameToDogFn {
 var (
 	maleHavaneseSpawner = DogSpawner(Havanese, Male)
 	femalePoodleSpawner = DogSpawner(Poodle, Female)
+
+	havaneseSpawner          = DogSpawnerCurry(Havanese)
+	poodleSpawner            = DogSpawnerCurry(Poodle)
+	maleHavaneseSpawnerCurry = havaneseSpawner(Male)
+	femalePoodleSpawnerCurry = poodleSpawner(Female)
 )
+
+// currying
+func threeSum(a, b, c int) int {
+	return a + b + c
+}
+
+func threeSumCurried(a int) func(int) func(int) int {
+	return func(b int) func(int) int {
+		return func(c int) int {
+			return a + b + c
+		}
+	}
+}
+
+func DogSpawnerCurry(breed Breed) func(Gender) func(Name) Dog {
+	return func(gender Gender) func(Name) Dog {
+		return func(name Name) Dog {
+			return Dog{
+				Breed:  breed,
+				Gender: gender,
+				Name:   name,
+			}
+		}
+	}
+}
