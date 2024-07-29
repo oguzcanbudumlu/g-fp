@@ -5,6 +5,8 @@ type Human struct {
 	age  int
 }
 
+// go build -gcflags '-m -l'
+//go:noinline
 func ImmutableCreateHuman() Human {
 	h := Human{}
 	h = immutableSetName(h, "Sean")
